@@ -75,3 +75,94 @@ def parse_headers(header_bytes: bytes) -> Tuple[str, Dict[str, str], bytes]:
             k, v = line.split(":", 1)
             headers[k.strip().lower()] = v.strip()
     return request_line, headers, remainder
+
+def parse_request_target(request_line: str, headers: Dict[str, str]):
+    parts = request_line.split()
+    if len(parts) < 2:
+        return None, None, None
+    method = parts[0]
+    target = parts[1]
+    parsed = urlparse(target)
+    if parsed.scheme and parsed.hostname:
+        host = parsed.hostname
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        path = parsed.path or "/"
+        if parsed.query:
+            path += "?" + parsed.query
+        return method, host, port, path
+    host_header = headers.get("host", "")
+    if ":" in host_header:
+        host, port = host_header.split(":", 1)
+        port = int(port)
+    else:
+        host = host_header
+        port = 80
+    path = target
+    return method, host, port, path
+
+def send_403(conn: socket.socket):
+    body = b"<html><body><h1>403 Forbidden</h1></body></html>"
+    resp = (
+        b"HTTP/1.1 403 Forbidden\r\n"
+        + b"Content-Type: text/html\r\n"
+        + f"Content-Length: {len(body)}\r\n".encode()
+        + b"Connection: close\r\n\r\n"
+        + body
+    )
+    conn.sendall(resp)
+
+def forward_request(client_conn: socket.socket, client_addr, initial_header_bytes: bytes, blocklist, logger):
+    try:
+        request_line, headers, remainder = parse_headers(initial_header_bytes)
+        method, host, port, path = parse_request_target(request_line, headers)
+        if host is None:
+            logger.info(f"{client_addr} - malformed request line: {request_line}")
+            client_conn.close()
+            return
+
+        if is_blocked(host, blocklist):
+            logger.info(f"{client_addr} -> {host}:{port} BLOCKED")
+            send_403(client_conn)
+            client_conn.close()
+            return
+
+        proto = request_line.split()[-1]
+        new_request_line = f"{method} {path} {proto}\r\n"
+        header_bytes_out = new_request_line.encode()
+        for k, v in headers.items():
+            header_bytes_out += f"{k}: {v}\r\n".encode()
+        header_bytes_out += b"\r\n"
+
+        content_length = int(headers.get("content-length", "0"))
+        body = remainder
+        to_read = content_length - len(body)
+        client_conn.settimeout(2.0)
+        while to_read > 0:
+            chunk = client_conn.recv(min(BUFFER_SIZE, to_read))
+            if not chunk:
+                break
+            body += chunk
+            to_read -= len(chunk)
+
+        with socket.create_connection((host, port), timeout=DEFAULT_TIMEOUT) as remote:
+            remote.sendall(header_bytes_out)
+            if body:
+                remote.sendall(body)
+            total = 0
+            while True:
+                data = remote.recv(BUFFER_SIZE)
+                if not data:
+                    break
+                client_conn.sendall(data)
+                total += len(data)
+
+            logger.info(f"{client_addr} -> {host}:{port} ALLOWED {method} {path} transferred {total} bytes")
+    except Exception as e:
+        logger.exception(f"Error handling request from {client_addr}: {e}")
+    finally:
+        try:
+            client_conn.shutdown(socket.SHUT_RDWR)
+        except Exception:
+            pass
+        client_conn.close()
+
