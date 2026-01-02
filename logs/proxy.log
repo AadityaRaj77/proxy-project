@@ -1,0 +1,29 @@
+2026-01-02 22:11:59,995 [INFO] Starting proxy on 127.0.0.1:8888 with 20 workers
+2026-01-02 22:11:59,996 [INFO] Loaded 3 blocked entries
+2026-01-02 22:11:59,998 [INFO] Listening for connections...
+2026-01-02 22:26:37,729 [ERROR] Error handling request from 127.0.0.1:50317: timed out
+Traceback (most recent call last):
+  File "Z:\ACM\proxy-project\src\proxy.py", line 153, in forward_request
+    data = remote.recv(BUFFER_SIZE)
+TimeoutError: timed out
+2026-01-02 22:27:08,487 [INFO] 127.0.0.1:50321 CONNECT example.com:443
+2026-01-02 22:27:08,787 [INFO] 127.0.0.1:50321 -> example.com:443 CONNECT tunnel closed
+2026-01-02 22:28:02,979 [INFO] 127.0.0.1:50327 -> badsite.org:80 BLOCKED
+2026-01-02 22:28:32,254 [INFO] 127.0.0.1:50328 CONNECT badsite.org:443
+2026-01-02 22:28:32,256 [INFO] 127.0.0.1:50328 -> badsite.org:443 CONNECT BLOCKED
+2026-01-02 22:36:42,740 [INFO] 127.0.0.1:51853 -> hub.example.com:80 BLOCKED
+2026-01-02 22:37:15,277 [INFO] 127.0.0.1:51856 CONNECT example.com:443
+2026-01-02 22:37:16,067 [INFO] 127.0.0.1:51856 -> example.com:443 CONNECT tunnel closed
+2026-01-02 22:57:32,367 [ERROR] Error handling request from 127.0.0.1:53183: [WinError 10061] No connection could be made because the target machine actively refused it
+Traceback (most recent call last):
+  File "Z:\ACM\proxy-project\src\proxy.py", line 147, in forward_request
+    with socket.create_connection((host, port), timeout=DEFAULT_TIMEOUT) as remote:
+         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\socket.py", line 864, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\Python313\Lib\socket.py", line 849, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+2026-01-02 22:57:57,519 [INFO] 127.0.0.1:53188 -> 192.0.2.5:80 BLOCKED
+2026-01-02 22:58:08,638 [INFO] Shutting down on user request
