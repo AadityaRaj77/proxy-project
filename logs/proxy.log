@@ -27,3 +27,6 @@ Traceback (most recent call last):
 ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
 2026-01-02 22:57:57,519 [INFO] 127.0.0.1:53188 -> 192.0.2.5:80 BLOCKED
 2026-01-02 22:58:08,638 [INFO] Shutting down on user request
+2026-01-04 02:05:48,863 [INFO] Starting proxy on 127.0.0.1:8888 with 20 workers
+2026-01-04 02:05:48,864 [INFO] Loaded 3 blocked entries
+2026-01-04 02:05:48,866 [INFO] Listening for connections...

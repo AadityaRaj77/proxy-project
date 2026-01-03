@@ -25,27 +25,31 @@ def setup_logger(path: str, max_bytes: int = 10_000_000, backup_count: int = 5):
     return logger
 
 def load_blocklist(path: str):
-    blocked = []
+    blocked = set()
     with open(path, "r") as f:
         for line in f:
             s = line.split("#", 1)[0].strip().lower()
             if not s:
                 continue
-            blocked.append(s)
+            blocked.add(s)
     return blocked
+
 
 def is_blocked(host: str, blocklist):
     if not host:
         return False
     host = host.strip().lower()
+
+    if host in blocklist:
+        return True
+
     for item in blocklist:
         if item.startswith(".") and host.endswith(item):
-            return True
-        if host == item:
             return True
         if item.startswith("*.") and host.endswith(item[1:]):
             return True
     return False
+
 
 def recv_until_double_crlf(conn: socket.socket, timeout=DEFAULT_TIMEOUT) -> bytes:
     conn.settimeout(timeout)
