@@ -152,15 +152,33 @@ def forward_request(client_conn: socket.socket, client_addr, initial_header_byte
             remote.sendall(header_bytes_out)
             if body:
                 remote.sendall(body)
+            
             total = 0
+            status_code = "UNKNOWN"
+            first_chunk = True
+            
             while True:
                 data = remote.recv(BUFFER_SIZE)
                 if not data:
                     break
+
+                if first_chunk:
+                       try:
+                           status_line = data.split(b"\r\n", 1)[0].decode()
+                           status_code = status_line.split()[1]
+                       except Exception:
+                            status_code = "UNKNOWN"
+                       first_chunk = False
+
                 client_conn.sendall(data)
                 total += len(data)
 
-            logger.info(f"{client_addr} -> {host}:{port} ALLOWED {method} {path} transferred {total} bytes")
+
+            logger.info(
+                f"{client_addr} -> {host}:{port} ALLOWED {method} {path} "
+                f"ORIGIN_STATUS={status_code} BYTES={total}"
+            )
+
     except Exception as e:
         logger.exception(f"Error handling request from {client_addr}: {e}")
     finally:
