@@ -149,6 +149,7 @@ def forward_request(client_conn: socket.socket, client_addr, initial_header_byte
             to_read -= len(chunk)
 
         with socket.create_connection((host, port), timeout=DEFAULT_TIMEOUT) as remote:
+            remote.settimeout(None)
             remote.sendall(header_bytes_out)
             if body:
                 remote.sendall(body)
