@@ -163,3 +163,41 @@ Traceback (most recent call last):
     for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 socket.gaierror: [Errno 11001] getaddrinfo failed
+2026-01-08 20:25:49,092 [INFO] Starting proxy on 0.0.0.0:8888 with 20 workers
+2026-01-08 20:25:49,092 [INFO] Loaded 3 blocked entries
+2026-01-08 20:25:49,093 [INFO] Listening for connections...
+2026-01-08 20:40:40,301 [INFO] 127.0.0.1:53308 -> p.example.com:80 BLOCKED
+2026-01-08 20:42:35,293 [INFO] 127.0.0.1:61860 -> httpbin.org:80 ALLOWED GET /get ORIGIN_STATUS=200 BYTES=523
+2026-01-08 20:52:25,689 [INFO] Shutting down on user request
+2026-01-08 21:05:14,356 [INFO] Starting proxy on 0.0.0.0:8888 with 20 workers
+2026-01-08 21:05:14,357 [INFO] Loaded 3 blocked entries
+2026-01-08 21:05:14,358 [INFO] Listening for connections...
+2026-01-08 21:07:58,671 [INFO] Shutting down on user request
+2026-01-08 21:10:40,156 [INFO] Starting proxy on 0.0.0.0:8888 with 20 workers
+2026-01-08 21:10:40,156 [INFO] Loaded 3 blocked entries
+2026-01-08 21:10:40,158 [INFO] Listening for connections...
+2026-01-08 21:12:12,636 [INFO] 127.0.0.1:54364 -> badsite.org:80 BLOCKED
+2026-01-08 21:12:32,521 [INFO] 127.0.0.1:58940 -> p.example.com:80 BLOCKED
+2026-01-08 21:13:03,661 [INFO] 127.0.0.1:58942 -> 192.0.2.5:80 BLOCKED
+2026-01-08 21:13:26,896 [INFO] 127.0.0.1:58944 -> ph.com:80 ALLOWED HEAD / ORIGIN_STATUS=403 BYTES=255
+2026-01-08 21:13:51,856 [INFO] 127.0.0.1:58948 CONNECT www.google.com:443
+2026-01-08 21:13:52,733 [INFO] 127.0.0.1:58948 -> www.google.com:443 CONNECT tunnel closed
+2026-01-08 21:14:26,555 [INFO] 127.0.0.1:65395 CONNECT badsite.org:443
+2026-01-08 21:14:26,556 [INFO] 127.0.0.1:65395 -> badsite.org:443 CONNECT BLOCKED
+2026-01-08 21:15:04,810 [ERROR] Error handling request from 127.0.0.1:49669: [WinError 10061] No connection could be made because the target machine actively refused it
+Traceback (most recent call last):
+  File "Z:\ACM\proxy-project\src\proxy.py", line 151, in forward_request
+    with socket.create_connection((host, port), timeout=DEFAULT_TIMEOUT) as remote:
+         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\socket.py", line 864, in create_connection
+    raise exceptions[0]
+  File "C:\Program Files\Python313\Lib\socket.py", line 849, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+2026-01-08 23:36:40,589 [INFO] Starting proxy on 0.0.0.0:8888 with 20 workers
+2026-01-08 23:36:40,589 [INFO] Loaded 3 blocked entries
+2026-01-08 23:36:40,591 [INFO] Listening for connections...
+2026-01-08 23:37:14,393 [INFO] 127.0.0.1:63465 -> ex.com:80 ALLOWED HEAD / ORIGIN_STATUS=405 BYTES=72
+2026-01-08 23:37:26,464 [INFO] 127.0.0.1:61030 -> ph.com:80 ALLOWED HEAD / ORIGIN_STATUS=403 BYTES=255
+2026-01-08 23:38:02,195 [INFO] 127.0.0.1:57023 -> www.github.com:80 ALLOWED HEAD / ORIGIN_STATUS=301 BYTES=88

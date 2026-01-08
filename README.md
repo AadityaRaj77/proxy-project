@@ -140,5 +140,11 @@ All requests are logged with:
 Example:
 
 ```bash
-127.0.0.1:50877 -> ph.com:80 ALLOWED HEAD / ORIGIN_STATUS=403 BYTES=255
+127.0.0.1:63465 -> ex.com:80 ALLOWED HEAD / ORIGIN_STATUS=405 BYTES=72
 ```
+
+## Video Demo and Documentation
+
+- Video Demo - https://drive.google.com/file/d/1Dt612ohdDnUc-VPZjWaMuCEVdsVmTfkB/view?usp=sharing
+
+- Documentation Link - https://drive.google.com/file/d/1ZinrV5x-eXuqmUFbBGrdA4neqiHOtIrS/view?usp=sharing
